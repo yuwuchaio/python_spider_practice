@@ -5,7 +5,6 @@ import threading
 from bs4 import BeautifulSoup
 import sqlite3
 import ast
-from pypinyin import lazy_pinyin
 
 baseUrl = 'https://sh.lianjia.com/ershoufang/'
 newest = 'co32'
@@ -28,8 +27,8 @@ hds=[{'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) 
     {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11'},\
     {'User-Agent':'Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; en) Presto/2.8.131 Version/11.11'},\
     {'User-Agent':'Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.1 31 Version/11.11'}]
-# 上海各区
-regions = [u'浦东', u'闵行', u'宝山', u'徐汇', u'普陀', u'杨浦', u'长宁', u'松江', u'嘉定', u'黄浦', u'静安', u'闸北', u'虹口', u'青浦', u'奉贤', u'金山',u'崇明', u'上海周边']
+# 上海各区u'浦东', u'闵行', u'宝山', u'徐汇', u'普陀', u'杨浦', u'长宁', u'松江', u'嘉定', u'黄浦', u'静安', u'闸北', u'虹口', u'青浦', u'奉贤', u'金山',u'崇明', u'上海周边'
+regions = ['pudong', 'minhang', 'baoshan', 'xuhui', 'putuo', 'yangpu', 'changning', 'songjiang', 'jiading', 'huangpu', 'jingan', 'zhabei', 'hongkou', 'qingpu', 'fengxian', 'jinshan', 'chongming', 'shanghaizhoubian']
 
 lock = threading.Lock()
 
@@ -37,7 +36,7 @@ class SQLiteWraper(object):
     """
        数据库的一个小封装，更好的处理多线程写入
        """
-    def __init__(self,path,command='',*args,**kwargs):
+    def __init__(self, path, command='', *args, **kwargs):
         self.lock = threading.RLock()
         self.path = path
 
@@ -114,7 +113,7 @@ def gen_chengjiao_insert_command(info_dict):
     """
     生成成交记录数据库插入命令
     """
-    info_list=[u'链接',u'小区名称',u'户型',u'面积',u'朝向',u'装修',u'楼层',u'建造时间',u'签约时间',u'签约单价',u'签约总价']
+    info_list=[u'链接', u'小区名称', u'户型', u'面积', u'朝向', u'装修', u'楼层', u'建造时间', u'签约时间', u'签约单价', u'签约总价']
     t=[]
     for il in info_list:
         if il in info_dict:
